@@ -1,213 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <title>Smart Gift Recommender</title>
-  <link rel="stylesheet" href="style.css">
-  <script src="http://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script> <!-- stats.js lib -->
-  <script src="http://threejs.org/examples/js/libs/stats.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.10.2/lottie.min.js"></script>
-
-
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gift Recommender Bot</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"/>
   <style>
-    /* General Styles */
-    /* ---- reset ---- */
-    body {
-      margin: 0;
-      font: normal 75% Arial, Helvetica, sans-serif;
+    .chat-container {
+      max-width: 800px;
+      margin: 0 auto;
     }
-
-    canvas {
-      display: block;
-      
+    .response-container {
+      min-height: 100px;
+      white-space: pre-wrap;
+      transition: all 0.3s ease;
     }
-
-    /* ---- particles.js container ---- */
-    #particles-js {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background-color: #000000;
-      background-repeat: no-repeat;
-      background-size: 20%;
-      background-position: 50% 50%;
-    }
-
-    /* ---- stats.js ---- */
-    .count-particles {
-      background: #000022;
-      position: absolute;
-      top: 48px;
-      left: 0;
-      width: 80px;
-      color: #13E8E9;
-      font-size: .8em;
-      text-align: left;
-      text-indent: 4px;
-      line-height: 14px;
-      padding-bottom: 2px;
-      font-family: Helvetica, Arial, sans-serif;
-      font-weight: bold;
-    }
-
-    .js-count-particles {
-      font-size: 1.1em;
-    }
-
-    #stats,
-    .count-particles {
-      
-      margin-top: 5px;
-      margin-left: 5px;
-    }
-
-    #stats {
-      border-radius: 3px 3px 0 0;
-      overflow: hidden;
-    }
-
-    .count-particles {
-      border-radius: 0 0 3px 3px;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #fdfdfd;
-      color: #333;
-      margin: 0;
-      padding: 0;
-      text-align: center;
-      overflow: hidden;
-    }
-
-    h1 {
-      margin-top: 30px;
-      color: #6c5ce7;
-      font-size: 2.5em;
-    }
-
-    /* Input Form */
-    .form {
-      margin: 20px auto;
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    input[type="text"] {
-      padding: 12px 16px;
-      font-size: 1rem;
-      width: 60%;
-      max-width: 500px;
-      border: 2px solid #ccc;
-      border-radius: 8px;
-      transition: border 0.3s ease;
-      margin-left: 100px ;
-    }
-
-    input[type="text"]:focus {
-      border-color: #6c5ce7;
-      outline: none;
-    }
-
-    button {
-      padding: 12px 20px;
-      font-size: 1rem;
-      background: #6c5ce7;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-
-    button:hover {
-      background: #5a4bcf;
-    }
-
-    /* Results Section */
-    #results {
-      margin: 40px auto;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 20px;
-      max-width: 1000px;
-    }
-
-    /* Gift Cards */
-    .card {
-      background: #fff;
-      border: 1px solid #eee;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-      width: 200px;
-      padding: 15px;
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-    }
-
-    .card img {
-      width: 100%;
-      height: 140px;
-      object-fit: cover;
-      border-radius: 8px;
-    }
-
-    .card h3 {
-      font-size: 1.1em;
-      margin: 10px 0 5px;
-      color: #2d3436;
-    }
-
-    .card p {
-      font-size: 1em;
-      color: #636e72;
-      margin: 0 0 10px;
-    }
-
-    .card a {
+    .loading {
       display: inline-block;
-      padding: 6px 12px;
-      background: #6c5ce7;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-size: 0.9em;
+      width: 20px;
+      height: 20px;
+      border: 3px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 3px solid #3498db;
+      animation: spin 1s linear infinite;
     }
-
-    .card a:hover {
-      background: #5a4bcf;
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
-
-
-    
+    .error-message {
+      color: #dc3545;
+      font-weight: bold;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+    }
+    .input-group-append {
+      cursor: pointer;
+    }
+    .btn-clear {
+      cursor: pointer;
+      color: #6c757d;
+    }
+    .response-text {
+      line-height: 1.6;
+    }
   </style>
-
 </head>
-
-<body >
-  <!-- particles.js container -->
-  <div id="particles-js">
-    <h1>🎁 Smart Gift Recommender</h1>
-
-  <div class="form">
-    <input type="text" id="userPrompt" placeholder="e.g. Gift for a 10-year-old girl who loves art">
-    <button onclick="recommendGifts()">Find Gifts</button>
+<body class="bg-light">
+  <div class="container mt-5">
+    <div class="chat-container">
+      <h2 class="text-center mb-4">🎁 Gift Recommender ChatBot</h2>
+      <div class="form-group">
+        <div class="input-group">
+          <input 
+            type="text" 
+            id="userInput" 
+            class="form-control" 
+            placeholder="Describe the person or occasion (e.g., 'my sister who loves cooking and her birthday is coming up')"
+            onkeypress="handleKeyPress(event)"
+          />
+          <div class="input-group-append">
+            <span class="input-group-text btn-clear" onclick="clearInput()">✖</span>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <button 
+            onclick="sendMessage()" 
+            id="submitButton"
+            class="btn btn-primary btn-block"
+          >
+            Get Gift Suggestion
+          </button>
+        </div>
+        <div class="col-auto">
+          <button 
+            onclick="resetChat()" 
+            id="resetButton"
+            class="btn btn-outline-secondary"
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+      <div id="response" class="mt-4 p-3 bg-white border rounded shadow-sm response-container"></div>
+    </div>
   </div>
-  <div id="loading-animation" style="width: 300px; height: 300px; margin: auto; display: none;"></div>
 
-  <div id="results"></div>
-  </div> <!-- stats - count particles -->
-  
-  
-  <script src="script.js"></script>
+  <script>
+    const userInput = document.getElementById('userInput');
+    const responseDiv = document.getElementById('response');
+    const submitButton = document.getElementById('submitButton');
+
+    function handleKeyPress(event) {
+      if (event.key === 'Enter') {
+        sendMessage();
+      }
+    }
+
+    function clearInput() {
+      userInput.value = '';
+      userInput.focus();
+    }
+
+    function resetChat() {
+      clearInput();
+      responseDiv.innerHTML = '';
+    }
+
+    function setLoading(isLoading) {
+      submitButton.disabled = isLoading;
+      if (isLoading) {
+        submitButton.innerHTML = '<span class="loading"></span> Thinking...';
+      } else {
+        submitButton.innerHTML = 'Get Gift Suggestion';
+      }
+    }
+
+    async function sendMessage() {
+      const input = userInput.value.trim();
+      
+      if (!input) {
+        responseDiv.innerHTML = '<div class="error-message">Please enter a description to get gift suggestions.</div>';
+        return;
+      }
+
+      setLoading(true);
+      responseDiv.innerHTML = '<div class="text-muted">Analyzing your request...</div>';
+
+      try {
+        const res = await fetch('/ask', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: input })
+        });
+
+        const data = await res.json();
+        
+        if (!res.ok) {
+          throw new Error(data.error || 'Failed to get response');
+        }
+
+        responseDiv.innerHTML = `<div class="response-text">${data.reply}</div>`;
+        // Auto clear input after successful response
+        clearInput();
+      } catch (error) {
+        responseDiv.innerHTML = `
+          <div class="error-message">
+            ${error.message}
+            <div class="mt-2">
+              <small>Please check your internet connection and try again.</small>
+            </div>
+          </div>`;
+      } finally {
+        setLoading(false);
+      }
+    }
+  </script>
 </body>
-
 </html>
